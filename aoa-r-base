@@ -1,0 +1,30 @@
+FROM rocker/r-ver:3.4.4
+
+RUN apt-get update -qq && apt-get install -y \
+      git-core \
+      libssl-dev \
+      libcurl4-gnutls-dev \
+      zlib1g-dev
+
+RUN apt-get install -y \
+      python3-pip \
+      libssl-dev \
+      libcurl4-openssl-dev && \
+      apt clean && rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install --no-cache-dir s3cmd
+
+RUN Rscript -e "install.packages('jsonlite')" && \
+    Rscript -e "install.packages('plumber')" && \
+    Rscript -e "install.packages('urltools')" && \
+    Rscript -e "install.packages('gbm')" && \
+    Rscript -e "install.packages('jsonlite')" && \
+    Rscript -e "install.packages('uuid')" && \
+    Rscript -e "install.packages('httr')" && \
+    Rscript -e "install.packages('argparse')" && \
+    Rscript -e "install.packages('devtools')" && \
+    Rscript -e "install.packages('caret')" && \
+    Rscript -e "install.packages('e1071')"  && \
+    Rscript -e "install.packages('tdplyr',repos=c('http://teradata-download.s3.amazonaws.com','http://cloud.r-project.org'))"
+
+CMD ["R"]

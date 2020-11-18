@@ -1,0 +1,17 @@
+FROM puckel/docker-airflow
+
+USER root
+
+RUN pip install --ignore-installed --upgrade --force-reinstall docker \
+  apache-airflow[kubernetes]==1.10.12 \
+  --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-1.10.12/constraints-3.7.txt"
+
+RUN apt update && apt install -y gnupg2 apt-transport-https && \
+  curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
+  echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/apt/sources.list.d/kubernetes.list && \
+  apt update && \
+  apt install -y kubectl && \
+  apt clean && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p /scheduler
+RUN mkdir -p /usr/local/airflow/dags

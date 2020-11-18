@@ -1,0 +1,47 @@
+# Analytics Ops Accelerator Base Docker images builder Azure Pipeline
+
+# This Pipeline should be used to generate the docker images of the project and should be triggered manually.
+# Change the Pipeline Variables in the UI to match your needs
+# DOCKER_ENABLE_RUN: enables or disables the build. Values: true, false
+# DOCKER_IMAGE_NAME: name for the new docker image, same as the dockerfile. String
+# DOCKER_IMAGE_TAG: tag for the new docker image. String
+
+trigger:
+  branches:
+    exclude:
+      - '*'
+
+variables:
+  dockerConnection: 'dockerhub-dartov'
+  newImageAccount: 'thinkbiganalytics'
+  newImageRepo: '$(DOCKER_IMAGE_NAME)'
+  newImageVersion: '$(DOCKER_IMAGE_TAG)'
+
+stages:
+  - stage: BaseDockerBuilder
+    displayName: 'Build Base Docker Image'
+    pool:
+      vmImage: 'ubuntu-latest'
+    jobs:
+      - job: BuildPushDocker
+        displayName: 'Build and push docker image'
+        condition: eq(variables['DOCKER_ENABLE_RUN'], 'true')
+        steps:
+          - task: CmdLine@2
+            displayName: 'Building base image $(newImageAccount)/$(newImageRepo):$(newImageVersion)'
+            inputs:
+              script: |
+                echo "Building base image $(newImageAccount)/$(newImageRepo):$(newImageVersion) from file \"$(newImageRepo)\""
+                export WORKING_DIR=$(pwd)
+                echo "##vso[task.setvariable variable=WORKING_DIR]$WORKING_DIR"
+          - task: Docker@2
+            displayName: 'Build and push docker image'
+            inputs:
+              command: buildAndPush
+              Dockerfile: '$(newImageRepo)'
+              containerRegistry: '$(dockerConnection)'
+              repository: '$(newImageAccount)/$(newImageRepo)'
+              buildContext: $(WORKING_DIR)
+              tags: |
+                latest
+                $(newImageVersion)
