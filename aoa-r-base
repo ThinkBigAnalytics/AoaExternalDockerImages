@@ -4,13 +4,14 @@ RUN apt-get update -qq && apt-get install -y \
       git-core \
       libssl-dev \
       libcurl4-gnutls-dev \
-      zlib1g-dev
+      zlib1g-dev \
+      openjdk-8-jdk-headless
 
 RUN apt-get install -y \
       python3-pip \
       libssl-dev \
       libcurl4-openssl-dev && \
-      apt clean && rm -rf /var/lib/apt/lists/*
+      apt-get clean
 
 RUN pip3 install --no-cache-dir s3cmd
 

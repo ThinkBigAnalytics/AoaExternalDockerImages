@@ -1,8 +1,8 @@
 FROM python:3.6.8-stretch
 
 RUN apt-get update -y --fix-missing
-RUN apt-get install -y python-pip python-dev build-essential gunicorn && \
-    apt clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get install -y python-pip python-dev build-essential gunicorn openjdk-8-jdk-headless && \
+    apt-get clean
 
 RUN pip install --no-cache-dir numpy==1.16.1 \
                tensorflow==1.8.0 \
@@ -27,6 +27,8 @@ RUN pip install --no-cache-dir numpy==1.16.1 \
                Werkzeug==0.16.1 \
                shap==0.36.0 \
                matplotlib==3.3.1 \
-               jinja2==2.11.2
+               jinja2==2.11.2 \
+               sklearn2pmml==0.63.1 \
+               jpmml-evaluator==0.3.3
 
 CMD ["python"]
