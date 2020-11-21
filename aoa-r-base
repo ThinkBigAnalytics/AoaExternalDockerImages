@@ -1,13 +1,15 @@
-FROM rocker/r-ver:3.4.4
+FROM rocker/r-base:4.0.3
 
 RUN apt-get update -qq && apt-get install -y \
       git-core \
       libssl-dev \
       libcurl4-gnutls-dev \
       zlib1g-dev \
-      openjdk-8-jdk-headless
+      software-properties-common
 
-RUN apt-get install -y \
+RUN add-apt-repository 'deb http://ftp.us.debian.org/debian sid main' && apt-get update && apt-get install -y openjdk-8-jdk-headless
+
+RUN apt-get update && apt-get install -y \
       python3-pip \
       libssl-dev \
       libcurl4-openssl-dev && \
@@ -15,7 +17,11 @@ RUN apt-get install -y \
 
 RUN pip3 install --no-cache-dir s3cmd
 
-RUN Rscript -e "install.packages('jsonlite')" && \
+RUN Rscript -e "install.packages('remotes')" && \
+    Rscript -e "remotes::install_version('dbplyr', version='1.4.4', repos='http://cloud.r-project.org')" && \
+    Rscript -e "install.packages('tdplyr',repos=c('http://teradata-download.s3.amazonaws.com','http://cloud.r-project.org'))" && \
+    Rscript -e "install.packages('r2pmml')" && \
+    Rscript -e "install.packages('jsonlite')" && \
     Rscript -e "install.packages('plumber')" && \
     Rscript -e "install.packages('urltools')" && \
     Rscript -e "install.packages('gbm')" && \
@@ -25,7 +31,6 @@ RUN Rscript -e "install.packages('jsonlite')" && \
     Rscript -e "install.packages('argparse')" && \
     Rscript -e "install.packages('devtools')" && \
     Rscript -e "install.packages('caret')" && \
-    Rscript -e "install.packages('e1071')"  && \
-    Rscript -e "install.packages('tdplyr',repos=c('http://teradata-download.s3.amazonaws.com','http://cloud.r-project.org'))"
+    Rscript -e "install.packages('e1071')"
 
 CMD ["R"]
