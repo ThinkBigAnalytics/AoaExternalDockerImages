@@ -12,25 +12,18 @@ RUN add-apt-repository 'deb http://ftp.us.debian.org/debian sid main' && apt-get
 RUN apt-get update && apt-get install -y \
       python3-pip \
       libssl-dev \
-      libcurl4-openssl-dev && \
+      libcurl4-openssl-dev \
+      libsodium-dev \
+      libgit2-dev \
+      libxml2-dev && \
       apt-get clean
 
 RUN pip3 install --no-cache-dir s3cmd
 
 RUN Rscript -e "install.packages('remotes')" && \
     Rscript -e "remotes::install_version('dbplyr', version='1.4.4', repos='http://cloud.r-project.org')" && \
-    Rscript -e "install.packages('tdplyr',repos=c('http://teradata-download.s3.amazonaws.com','http://cloud.r-project.org'))" && \
-    Rscript -e "install.packages('r2pmml')" && \
-    Rscript -e "install.packages('jsonlite')" && \
-    Rscript -e "install.packages('plumber')" && \
-    Rscript -e "install.packages('urltools')" && \
-    Rscript -e "install.packages('gbm')" && \
-    Rscript -e "install.packages('jsonlite')" && \
-    Rscript -e "install.packages('uuid')" && \
-    Rscript -e "install.packages('httr')" && \
-    Rscript -e "install.packages('argparse')" && \
-    Rscript -e "install.packages('devtools')" && \
-    Rscript -e "install.packages('caret')" && \
-    Rscript -e "install.packages('e1071')"
+    Rscript -e "install.packages('tdplyr',repos=c('http://teradata-download.s3.amazonaws.com','http://cloud.r-project.org'))"
+
+RUN Rscript -e "install.packages(c('r2pmml', 'devtools', 'jsonlite', 'plumber', 'urltools', 'gbm', 'uuid', 'httr', 'argparse', 'caret', 'e1071'))"
 
 CMD ["R"]
