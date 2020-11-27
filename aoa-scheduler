@@ -2,6 +2,11 @@ FROM puckel/docker-airflow
 
 USER root
 
+ENV AIRFLOW__CORE__LOGGING_LEVEL 'WARN'
+ENV GUNICORN_CMD_ARGS '--log-level WARN'
+ENV AIRFLOW__SCHEDULER__MIN_FILE_PROCESS_INTERVAL 15
+ENV AIRFLOW__SCHEDULER__DAG_DIR_LIST_INTERVAL 30
+
 RUN pip install --ignore-installed --upgrade --force-reinstall docker \
   apache-airflow[kubernetes]==1.10.12 \
   --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-1.10.12/constraints-3.7.txt"
