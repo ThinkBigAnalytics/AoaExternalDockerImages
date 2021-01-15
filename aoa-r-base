@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y \
       libxml2-dev && \
       apt-get clean
 
-RUN pip3 install --no-cache-dir s3cmd
+RUN pip3 install --no-cache-dir s3cmd aoa==2.8.0rc5
 
 RUN Rscript -e "install.packages('remotes')" && \
     Rscript -e "remotes::install_version('dbplyr', version='1.4.4', repos='http://cloud.r-project.org')" && \
