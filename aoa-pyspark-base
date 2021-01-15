@@ -8,7 +8,7 @@ RUN apt-get install -y zip openjdk-8-jdk && \
 
 ENV JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/"
 
-RUN conda create -n pyspark -c conda-forge python=3.6 pyspark=2.4.3 pandas=0.24.2 numpy=1.16.1 scikit-learn=0.20.3 conda-pack shap==0.37.0
-RUN /usr/local/envs/pyspark/bin/pip install teradataml==17.0.0.0 nyoka==4.3.0 xgboost==0.90 aoa==2.8.0rc5
+RUN conda create -y -n pyspark -c conda-forge python=3.6 pyspark=2.4.3 pandas=0.24.2 numpy=1.16.1 scikit-learn=0.20.3 conda-pack shap==0.37.0
+RUN /usr/local/envs/pyspark/bin/pip install teradataml==17.0.0.0 nyoka==4.3.0 xgboost==0.90 aoa==2.8.0rc5 s3cmd==2.0.2
 
 CMD ["bash"]
