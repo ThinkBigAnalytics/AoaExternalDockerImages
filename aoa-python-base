@@ -4,6 +4,8 @@ RUN apt-get update -y --fix-missing
 RUN apt-get install -y python-pip python-dev build-essential gunicorn openjdk-8-jdk-headless && \
     apt-get clean
 
+RUN pip install --upgrade setuptools
+
 RUN pip install --no-cache-dir numpy==1.16.1 \
                tensorflow==1.8.0 \
                keras==2.2.0 \
