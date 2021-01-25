@@ -1,28 +1,35 @@
 FROM rocker/r-base:4.0.3
 
+RUN apt-get update -qq && apt-get install -y wget build-essential checkinstall \
+    libreadline-gplv2-dev libncursesw5-dev libssl-dev \
+    libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev zlib1g-dev
+
+RUN wget https://www.python.org/ftp/python/3.7.9/Python-3.7.9.tgz && tar -xzf Python-3.7.9.tgz && \
+    cd Python-3.7.9 && ./configure --enable-optimizations && make install && cd .. && rm -fr ./Python-3.7.9
+
 RUN apt-get update -qq && apt-get install -y \
-      git-core \
-      libssl-dev \
-      libcurl4-gnutls-dev \
-      zlib1g-dev \
-      software-properties-common
+    git-core \
+    libssl-dev \
+    libcurl4-gnutls-dev \
+    zlib1g-dev \
+    software-properties-common
 
 RUN add-apt-repository 'deb http://ftp.us.debian.org/debian sid main' && apt-get update && apt-get install -y openjdk-8-jdk-headless
 
 RUN apt-get update && apt-get install -y \
-      python3-pip \
-      libssl-dev \
-      libcurl4-openssl-dev \
-      libsodium-dev \
-      libgit2-dev \
-      libxml2-dev && \
-      apt-get clean
+    python3-pip \
+    libssl-dev \
+    libcurl4-openssl-dev \
+    libsodium-dev \
+    libgit2-dev \
+    libxml2-dev && \
+    apt-get clean
 
 RUN pip3 install --no-cache-dir s3cmd==2.0.2 aoa==2.8.0rc5
 
 RUN Rscript -e "install.packages('remotes')" && \
-    Rscript -e "remotes::install_version('dbplyr', version='1.4.4', repos='http://cloud.r-project.org')" && \
-    Rscript -e "install.packages('tdplyr',repos=c('http://teradata-download.s3.amazonaws.com','http://cloud.r-project.org'))"
+    Rscript -e "remotes::install_version('dbplyr', version='1.4.4', repos='https://cloud.r-project.org')" && \
+    Rscript -e "install.packages('tdplyr',repos=c('https://teradata-download.s3.amazonaws.com','https://cloud.r-project.org'))"
 
 RUN Rscript -e "install.packages(c('r2pmml', 'devtools', 'jsonlite', 'plumber', 'urltools', 'gbm', 'uuid', 'httr', 'argparse', 'caret', 'e1071'))"
 
