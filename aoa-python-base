@@ -19,7 +19,7 @@ RUN pip install --no-cache-dir numpy==1.16.1 \
                teradataml==17.0.0.0 \
                pandas==0.24.2 \
                tables==3.5.2 \
-               aoa==3.1 \
+               aoa==3.1.1 \
                s3cmd==2.0.2 \
                scikit-learn==0.22.2 \
                xgboost==0.90 \

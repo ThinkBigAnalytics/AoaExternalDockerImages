@@ -12,8 +12,8 @@ trigger:
       - '*'
 
 variables:
-  dockerConnection: 'dockerhub-dartov'
-  newImageAccount: 'thinkbiganalytics'
+  dockerConnection: 'AWS Public ECR'
+  newImageAccount: 'public.ecr.aws/teradata'
   newImageRepo: '$(DOCKER_IMAGE_NAME)'
   newImageVersion: '$(DOCKER_IMAGE_TAG)'
 
