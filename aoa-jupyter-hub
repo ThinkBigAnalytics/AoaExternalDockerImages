@@ -1,0 +1,26 @@
+# Copyright (c) Jupyter Development Team.
+# Distributed under the terms of the Modified BSD License.
+ARG JUPYTERHUB_VERSION=1.4.1
+ARG BASE_IMAGE=jupyterhub/jupyterhub:latest
+FROM $BASE_IMAGE
+
+# Install dockerspawner, oauth, postgres, idle-culler, ldap-auth, kubespawner
+RUN pip3 install --no-cache-dir --quiet \
+        oauthenticator==0.8.* \
+        dockerspawner==0.9.* \
+        jupyterhub-kubespawner \
+        psycopg2-binary \
+        jupyterhub-idle-culler \
+        jupyterhub-ldap-authenticator
+
+# Generate cookie secret file
+RUN openssl rand -hex 32 > /srv/jupyterhub/jupyterhub_cookie_secret && \
+    chmod 600 /srv/jupyterhub/jupyterhub_cookie_secret
+
+# Create demo users
+RUN useradd -M -r -s /bin/false admin && useradd -M -r -s /bin/false developer && useradd -M -r -s /bin/false user && \
+    echo "admin:admin" | chpasswd && echo "developer:developer" | chpasswd && echo "user:user" | chpasswd
+RUN echo "admin admin" >> /srv/jupyterhub/userlist && echo "developer" >> /srv/jupyterhub/userlist && echo "user" >> /srv/jupyterhub/userlist
+
+# Add sample notebooks
+ADD ["notebooks/", "/aoa/notebooks/"]
