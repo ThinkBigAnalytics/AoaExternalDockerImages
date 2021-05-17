@@ -4,3 +4,11 @@
 *.iml
 out
 gen
+
+# Compressed files
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.zip
+*.7z
