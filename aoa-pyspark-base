@@ -7,13 +7,25 @@ ARG AOA_CLI_VERSION=4.0
 
 USER root
 
-RUN apt-get update -y --fix-missing
-RUN apt-get install -y zip openjdk-8-jdk && \
-    apt-get clean
+RUN apt update -y --fix-missing && apt upgrade -y && \
+    apt install -y zip git gcc openjdk-8-jdk && \
+    apt clean
 
 ENV JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/"
 
-RUN conda create -y -n pyspark -c conda-forge python=3.6 pyspark=2.4.3 pandas=0.24.2 numpy=1.16.1 scikit-learn=0.20.3 conda-pack shap==0.37.0
-RUN /usr/local/envs/pyspark/bin/pip install teradataml==17.0.0.0 nyoka==4.3.0 xgboost==0.90 aoa==$AOA_CLI_VERSION s3cmd==2.0.2
+RUN conda create -y -n pyspark -c conda-forge python=3.6 pyspark conda-pack tensorflow keras flask gunicorn xgboost statsmodels matplotlib jinja2
+
+# Make RUN commands use the new environment:
+RUN echo ". /usr/local/etc/profile.d/conda.sh" >> ~/.bashrc && \
+    echo "conda activate pyspark" >> ~/.bashrc
+SHELL ["/bin/bash", "--login", "-c"]
+
+RUN pip install --no-cache-dir teradataml>=17.0.0.0 aoa>=$AOA_CLI_VERSION flask-cors pyformance healthcheck nyoka sklearn2pmml jpmml-evaluator tables s3cmd flask-prometheus-metrics futures
+
+RUN apt update -y --fix-missing && \
+    apt install -y --reinstall build-essential && \
+    apt clean
+
+RUN pip install --no-cache-dir sklearn2pmml xgboost scikit-learn shap
 
 CMD ["bash"]
