@@ -41,10 +41,11 @@ RUN pip install --quiet --no-cache-dir \
     'sklearn2pmml==0.60.0' \
     'keras>=2.2.0' \
     'shap==0.36.0' \
-    'aoa>=4.0' \
+    aoa>=$AOA_CLI_VERSION \
     'tdextensions' \
     jupyterhub==$JUPYTERHUB_VERSION \
     'jupyterlab-git>=0.30.1' \
+    'jupyter-resource-usage' \
     's3cmd' \
     'tensorflow' \
     'teradataml'
