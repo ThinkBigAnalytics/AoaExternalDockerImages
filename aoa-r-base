@@ -1,4 +1,9 @@
-FROM rocker/r-base:4.0.3
+# Copyright (c) Teradata.
+# Distributed under the terms of the Modified BSD License.
+ARG BASE_CONTAINER=rocker/r-base:4.0.3
+FROM $BASE_CONTAINER
+
+ARG AOA_CLI_VERSION=4.0
 
 RUN apt-get update -qq && apt-get install -y wget build-essential checkinstall \
     libreadline-gplv2-dev libncursesw5-dev libssl-dev \
@@ -25,7 +30,7 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev && \
     apt-get clean
 
-RUN pip3 install --no-cache-dir s3cmd==2.0.2 aoa==2.8.0rc5
+RUN pip3 install --no-cache-dir s3cmd==2.0.2 aoa==$AOA_CLI_VERSION
 
 RUN Rscript -e "install.packages('remotes')" && \
     Rscript -e "remotes::install_version('dbplyr', version='1.4.4', repos='https://cloud.r-project.org')" && \

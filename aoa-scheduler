@@ -1,4 +1,7 @@
-FROM puckel/docker-airflow
+# Copyright (c) Teradata.
+# Distributed under the terms of the Modified BSD License.
+ARG BASE_CONTAINER=puckel/docker-airflow
+FROM $BASE_CONTAINER
 
 USER root
 
