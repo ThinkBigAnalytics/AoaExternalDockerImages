@@ -1,0 +1,11 @@
+FROM openjdk:8-jdk
+
+RUN apt update -y
+RUN apt -y install \
+    bash \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    maven \
+    bc \
+    jq
