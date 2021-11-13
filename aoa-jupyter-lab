@@ -1,9 +1,9 @@
 # Copyright (c) Teradata.
 # Distributed under the terms of the Modified BSD License.
-ARG BASE_CONTAINER=jupyter/datascience-notebook:lab-3.0.14
+ARG BASE_CONTAINER=jupyter/datascience-notebook:lab-3.2.2
 FROM $BASE_CONTAINER
 
-ARG AOA_CLI_VERSION=4.0
+ARG AOA_CLI_VERSION=4.1.12
 
 # change to root user to install java
 USER root
@@ -21,7 +21,7 @@ RUN apt-get update && \
 
 # Fix certificate issues
 RUN apt-get update && \
-    apt-get install -y ca-certificates-java && \
+    apt-get install -y ca-certificates-java g++ && \
     apt-get clean && \
     update-ca-certificates -f && \
     rm -rf /var/lib/apt/lists/* && \
@@ -35,20 +35,15 @@ RUN export JAVA_HOME
 RUN pip install --quiet --no-cache-dir --upgrade pip
 
 # Install Teradata Extensions and some other dependencies
-ARG JUPYTERHUB_VERSION=1.4.1
+ARG JUPYTERHUB_VERSION=1.5.0
 RUN pip install --quiet --no-cache-dir \
-    'xgboost==0.90' \
-    'sklearn2pmml==0.60.0' \
-    'keras>=2.2.0' \
-    'shap==0.36.0' \
-    aoa>=$AOA_CLI_VERSION \
-    'tdextensions' \
-    jupyterhub==$JUPYTERHUB_VERSION \
-    'jupyterlab-git>=0.30.1' \
-    'jupyter-resource-usage' \
-    's3cmd' \
-    'tensorflow' \
-    'teradataml'
+    "pandas" \
+    "sklearn" \
+    "aoa==$AOA_CLI_VERSION" \
+    "jupyterhub==$JUPYTERHUB_VERSION" \
+    "jupyterlab-git>=0.30.1" \
+    "jupyter-resource-usage" \
+    "teradataml"
 
 ENV JUPYTER_ENABLE_LAB=yes
 
@@ -117,9 +112,10 @@ RUN jupyter kernelspec install /teradata/teradatasqllinux_$TERADATA_SQL_KERNEL_V
     jupyter labextension install /teradata/teradatasqllinux_$TERADATA_SQL_KERNEL_VERSION/teradata_preferences-$TERADATA_SQL_KERNEL_VERSION.tgz
 
 # Install Teradata ODBC
-ENV TERADATA_ODBC_VERSION=1700
-ENV TERADATA_ODBC_PKG=linux_x8664.17.00.00.22-1
-ENV TERADATA_ODBC_BUILD=17.00.00.22-1
+ENV TERADATA_ODBC_VERSION=1710
+ENV TERADATA_ODBC_PKG=linux_x8664.17.10.00.11-1
+ENV TERADATA_ODBC_BUILD=17.10.00.11-1
+
 RUN curl https://dslab-utils.s3-us-west-2.amazonaws.com/tdodbc${TERADATA_ODBC_VERSION}__${TERADATA_ODBC_PKG}.tar.gz | tar xvz -C /teradata/
 RUN cd /teradata/tdodbc${TERADATA_ODBC_VERSION} && \
     ./setup_wrapper.sh -r tdodbc${TERADATA_ODBC_VERSION}-${TERADATA_ODBC_BUILD}.x86_64.rpm -s
@@ -136,9 +132,6 @@ RUN fix-permissions "${CONDA_DIR}" && fix-permissions "/home/${NB_USER}"
 # Allow to run java with sudo without asking for password
 RUN echo "${NB_USER} ALL=(ALL) NOPASSWD: /usr/bin/java" >> /etc/sudoers
 
-# Install JupyterLab Git extension
-#RUN pip install jupyterlab-git==0.30.1
-
 # Install private CA certs for aoa cli, pip & conda
 #COPY ca-private.crt /etc/ssl/certs/private-ca.pem
 #COPY ca-private.crt /opt/conda/ssl/certs/private-ca.pem
@@ -146,14 +139,40 @@ RUN echo "${NB_USER} ALL=(ALL) NOPASSWD: /usr/bin/java" >> /etc/sudoers
 #RUN cat /opt/conda/ssl/certs/private-ca.pem >> /etc/ssl/certs/ca-certificates.crt
 #ENV REQUESTS_CA_BUNDLE=/opt/conda/ssl/cert.pem
 
-# Add AOA CLI config file
-RUN mkdir -p /home/jovyan/.aoa && \
-    echo 'aoa_credentials: YWRtaW46YWRtaW4=' >> /home/jovyan/.aoa/config.yaml && \
-    echo 'aoa_url: http://aoa-core:8080' >> /home/jovyan/.aoa/config.yaml   && \
-    echo 'auth_mode: basic' >> /home/jovyan/.aoa/config.yaml
+# Fix permissions
+RUN fix-permissions "${CONDA_DIR}/ssl" && fix-permissions "/teradata" && chown -R ${NB_USER} "/home/${NB_USER}/work"
+
+# Rename default pyhon3 kernel
+RUN jupyter kernelspec uninstall -f python3
+
+# Create python 3.6 kernel
+RUN conda create -n py36 python=3.6 ipykernel
+RUN conda run -n py36 pip uninstall -y jupyter_client
+RUN conda run -n py36 pip install --no-cache-dir --user jupyter_client pandas "aoa==$AOA_CLI_VERSION" sklearn teradataml
+RUN conda run -n py36 python -m ipykernel install --name=py36 --display-name "Python 3.6 (default)"
+
+# Create python 3.6 STO kernel
+RUN conda create -n py36sto python=3.6 ipykernel
+RUN conda run -n py36sto pip uninstall -y jupyter_client
+RUN conda run -n py36sto pip install --no-cache-dir --user jupyter_client "pandas==0.24.2" "aoa==$AOA_CLI_VERSION" "scikit-learn==0.20.3" teradataml
+RUN conda run -n py36sto python -m ipykernel install --name=py36sto --display-name "Python 3.6 (STO)"
+
+# Create python 3.7 STO kernel
+RUN conda create -n py37sto python=3.7 ipykernel
+RUN conda run -n py37sto pip uninstall -y jupyter_client
+RUN conda run -n py37sto pip install --no-cache-dir --user jupyter_client "aoa==$AOA_CLI_VERSION" teradataml
+RUN conda run -n py37sto python -m ipykernel install --name=py37sto --display-name "Python 3.7 (STO)"
+
+# Create python 3.9 kernel
+RUN conda run -n base pip install --no-cache-dir --user "aoa==$AOA_CLI_VERSION" teradataml
+RUN conda run -n base python -m ipykernel install --name=python3 --display-name "Python 3.9"
 
 # Fix permissions
-RUN fix-permissions "${CONDA_DIR}/ssl" && fix-permissions "/home/${NB_USER}/.aoa" && fix-permissions "/teradata"
+RUN fix-permissions "/home/${NB_USER}/.local"
+
+# Set up Jupyter resource usage
+ENV MEM_LIMIT=1073741824
+ENV CPU_LIMIT=1
 
 # change to default user ${NB_USER}, since we don't want to run as root
 ENV HOME=/home/${NB_USER}
