@@ -1,10 +1,11 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
-ARG JUPYTERHUB_VERSION=1.4.1
-ARG BASE_IMAGE=jupyterhub/jupyterhub:latest
+ARG JUPYTERHUB_VERSION=1.5.0
+ARG BASE_IMAGE=jupyterhub/jupyterhub:$JUPYTERHUB_VERSION
 FROM $BASE_IMAGE
 
 # Install dockerspawner, oauth, postgres, idle-culler, ldap-auth, kubespawner
+# NOTE: for ActiveDirectory ldap better use jupyterhub-ldapauthenticator instead of jupyterhub-ldap-authenticator
 RUN pip3 install --no-cache-dir --quiet \
         oauthenticator==0.8.* \
         dockerspawner==0.9.* \
