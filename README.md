@@ -21,6 +21,7 @@ The main concepts and entities we support in the framework are
 DOCKER_ENABLE_RUN=true
 DOCKER_IMAGE_NAME=aoa-base-image
 DOCKER_IMAGE_TAG=1.0.0
+DOCKER_REPOSITORY_URI=public.ecr.aws/teradata
 ```
 
 The resulting image will be `thinkbiganalytics/aoa-base-image:1.0.0`
