@@ -14,6 +14,8 @@ trigger:
 
 variables:
   - group: dev
+  - name: newImageAccount
+    value: '$(DOCKER_REPOSITORY_URI)'
   - name: newImageRepo
     value: '$(DOCKER_IMAGE_NAME)'
   - name: newImageVersion
@@ -30,14 +32,14 @@ stages:
         condition: eq(variables['DOCKER_ENABLE_RUN'], 'true')
         steps:
           - task: CmdLine@2
-            displayName: 'Building base image $(DOCKER_REPOSITORY_URI)/$(newImageRepo):$(newImageVersion)'
+            displayName: 'Building base image $(newImageAccount)/$(newImageRepo):$(newImageVersion)'
             inputs:
               script: |
-                echo "Building base image $(DOCKER_REPOSITORY_URI)/$(newImageRepo):$(newImageVersion) from file \"$(newImageRepo)\""
+                echo "Building base image $(newImageAccount)/$(newImageRepo):$(newImageVersion) from file \"$(newImageRepo)\""
                 export WORKING_DIR=$(pwd)
                 echo "##vso[task.setvariable variable=WORKING_DIR]$WORKING_DIR"
           - script: |
-              aws ecr-public get-login-password --region $(AWS_REGION) | docker login --username AWS --password-stdin $(DOCKER_REPOSITORY_URI)
+              aws ecr-public get-login-password --region $(AWS_REGION) | docker login --username AWS --password-stdin $(newImageAccount)
             displayName: 'Login to AWS'
             env:
               AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
@@ -47,7 +49,7 @@ stages:
             inputs:
               command: buildAndPush
               Dockerfile: '$(newImageRepo)'
-              repository: '$(DOCKER_REPOSITORY_URI)/$(newImageRepo)'
+              repository: '$(newImageAccount)/$(newImageRepo)'
               buildContext: $(WORKING_DIR)
               tags: |
                 latest
