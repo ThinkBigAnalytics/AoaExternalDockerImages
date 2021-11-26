@@ -15,12 +15,13 @@ The main concepts and entities we support in the framework are
 | DOCKER_ENABLE_RUN | Boolean | Enables or disables the build. Values: true, false. |
 | DOCKER_IMAGE_NAME | String | Name for the new docker image, same as the dockerfile. |
 | DOCKER_IMAGE_TAG  | String | Tag for the new docker image. |
-
+| DOCKER_REPOSITORY_URI  | String | Uri of the repository (without the image name) |
 **Example:**
 ```
 DOCKER_ENABLE_RUN=true
 DOCKER_IMAGE_NAME=aoa-base-image
 DOCKER_IMAGE_TAG=1.0.0
+DOCKER_REPOSITORY_URI=public.ecr.aws/teradata
 ```
 
 The resulting image will be `thinkbiganalytics/aoa-base-image:1.0.0`
