@@ -148,23 +148,23 @@ RUN jupyter kernelspec uninstall -f python3
 # Create python 3.6 kernel
 RUN conda create -n py36 python=3.6 ipykernel
 RUN conda run -n py36 pip uninstall -y jupyter_client
-RUN conda run -n py36 pip install --no-cache-dir --user jupyter_client pandas "aoa==$AOA_CLI_VERSION" sklearn teradataml
+RUN conda run -n py36 pip install --no-cache-dir --ignore-installed jupyter_client pandas "aoa==$AOA_CLI_VERSION" sklearn teradataml
 RUN conda run -n py36 python -m ipykernel install --name=py36 --display-name "Python 3.6 (default)"
 
 # Create python 3.6 STO kernel
 RUN conda create -n py36sto python=3.6 ipykernel
 RUN conda run -n py36sto pip uninstall -y jupyter_client
-RUN conda run -n py36sto pip install --no-cache-dir --user jupyter_client "pandas==0.24.2" "aoa==$AOA_CLI_VERSION" "scikit-learn==0.20.3" teradataml
+RUN conda run -n py36sto pip install --no-cache-dir --ignore-installed jupyter_client "pandas==0.24.2" "aoa==$AOA_CLI_VERSION" "scikit-learn==0.20.3" teradataml
 RUN conda run -n py36sto python -m ipykernel install --name=py36sto --display-name "Python 3.6 (STO)"
 
 # Create python 3.7 STO kernel
 RUN conda create -n py37sto python=3.7 ipykernel
 RUN conda run -n py37sto pip uninstall -y jupyter_client
-RUN conda run -n py37sto pip install --no-cache-dir --user jupyter_client "aoa==$AOA_CLI_VERSION" teradataml
+RUN conda run -n py37sto pip install --no-cache-dir --ignore-installed jupyter_client "aoa==$AOA_CLI_VERSION" teradataml
 RUN conda run -n py37sto python -m ipykernel install --name=py37sto --display-name "Python 3.7 (STO)"
 
 # Create python 3.9 kernel
-RUN conda run -n base pip install --no-cache-dir --user "aoa==$AOA_CLI_VERSION" teradataml
+RUN conda run -n base pip install --no-cache-dir "aoa==$AOA_CLI_VERSION" teradataml
 RUN conda run -n base python -m ipykernel install --name=python3 --display-name "Python 3.9"
 
 # Fix permissions
