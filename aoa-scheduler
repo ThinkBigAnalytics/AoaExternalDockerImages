@@ -1,11 +1,11 @@
 # Copyright (c) Teradata.
 # Distributed under the terms of the Modified BSD License.
-ARG BASE_CONTAINER=puckel/docker-airflow
+ARG BASE_CONTAINER=apache/airflow:2.2.2-python3.9
 FROM $BASE_CONTAINER
 
 USER root
 
-ENV AIRFLOW__CORE__LOGGING_LEVEL 'WARN'
+ENV AIRFLOW__LOGGING__LOGGING_LEVEL 'WARN'
 ENV GUNICORN_CMD_ARGS '--log-level WARN'
 ENV AIRFLOW__SCHEDULER__MIN_FILE_PROCESS_INTERVAL 15
 ENV AIRFLOW__SCHEDULER__DAG_DIR_LIST_INTERVAL 30
@@ -16,11 +16,11 @@ ENV AIRFLOW_ADMIN_USERNAME 'admin'
 ENV AIRFLOW_ADMIN_PASSWORD 'admin'
 ENV AIRFLOW_ADMIN_EMAIL 'admin@example.com'
 
-RUN apt update && apt install -y libsasl2-dev python-dev libldap2-dev libssl-dev
+RUN apt update && apt install -y libsasl2-dev python3-dev libldap2-dev libssl-dev slapd ldap-utils tox lcov valgrind
 
-RUN pip install --ignore-installed --upgrade --force-reinstall pyldap docker flask_bcrypt \
-  apache-airflow[kubernetes,ldap]==1.10.14 \
-  --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-1.10.14/constraints-3.7.txt"
+RUN pip install --ignore-installed --upgrade --force-reinstall pyldap docker flask_bcrypt psycopg2-binary\
+  apache-airflow[kubernetes,ldap]==2.2.2 \
+  --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.2.2/constraints-3.9.txt"
 
 RUN apt update && apt install -y gnupg2 apt-transport-https && \
   curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
