@@ -18,7 +18,7 @@ ENV AIRFLOW_ADMIN_EMAIL 'admin@example.com'
 
 RUN apt update && apt install -y libsasl2-dev python3-dev libldap2-dev libssl-dev slapd ldap-utils tox lcov valgrind
 
-RUN pip install --ignore-installed --upgrade --force-reinstall pyldap docker flask_bcrypt psycopg2-binary\
+RUN pip install --ignore-installed --upgrade --force-reinstall pyldap docker flask_bcrypt psycopg2-binary apache-airflow-providers-docker\
   apache-airflow[kubernetes,ldap]==2.2.2 \
   --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.2.2/constraints-3.9.txt"
 
