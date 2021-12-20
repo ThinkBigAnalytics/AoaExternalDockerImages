@@ -42,14 +42,14 @@ stages:
                 echo "##vso[task.setvariable variable=WORKING_DIR]$WORKING_DIR"
           - script: |
               aws ecr-public get-login-password --region $(AWS_REGION) | docker login --username AWS --password-stdin $(newImageAccount)
-            condtition: eq($isPrivateRepo, 'false')
+            condition: eq($isPrivateRepo, 'false')
             displayName: 'Login to AWS'
             env:
               AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
               AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
           - script: |
               aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $(newImageAccount)
-            condtition: eq($isPrivateRepo, 'true')
+            condition: eq($isPrivateRepo, 'true')
             displayName: 'Login to AWS'
             env:
               AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
