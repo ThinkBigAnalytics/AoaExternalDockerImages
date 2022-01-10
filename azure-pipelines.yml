@@ -6,6 +6,7 @@
 # DOCKER_IMAGE_NAME: name for the new docker image, same as the dockerfile. String
 # DOCKER_IMAGE_TAG: tag for the new docker image. String
 # DOCKER_REPOSITORY_URI: Uri of the repository (without the image name)
+# IS_PRIVATE_REPO: enables or disables the use of private AWS repository. Values: true, false
 
 trigger:
   branches:
@@ -41,16 +42,16 @@ stages:
                 export WORKING_DIR=$(pwd)
                 echo "##vso[task.setvariable variable=WORKING_DIR]$WORKING_DIR"
           - script: |
-              aws ecr-public get-login-password --region $(AWS_REGION) | docker login --username AWS --password-stdin $(newImageAccount)
-            condition: eq(variables.isPrivateRepo, 'false')
-            displayName: 'Login to AWS'
+              aws ecr get-login-password --region $(AWS_REGION) | docker login --username AWS --password-stdin $(newImageAccount)
+            condition: eq(variables.isPrivateRepo, 'true')
+            displayName: 'Login to AWS private registry'
             env:
               AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
               AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
           - script: |
-              aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $(newImageAccount)
-            condition: eq(variables.isPrivateRepo, 'true')
-            displayName: 'Login to AWS'
+              aws ecr-public get-login-password --region $(AWS_REGION) | docker login --username AWS --password-stdin public.ecr.aws
+            condition: eq(variables.isPrivateRepo, 'false')
+            displayName: 'Login to AWS public registry'
             env:
               AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
               AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
