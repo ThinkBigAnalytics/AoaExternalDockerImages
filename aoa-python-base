@@ -6,8 +6,13 @@ FROM $BASE_CONTAINER
 ARG AOA_CLI_VERSION=6.0.0rc6
 
 RUN apt-get update -y --fix-missing
-RUN apt-get install -y python-pip python-dev build-essential gunicorn openjdk-8-jdk-headless && \
-    apt-get clean
+
+RUN wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | sudo apt-key add -
+RUN add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/
+RUN apt-get update && sudo apt-get install adoptopenjdk-8-hotspot
+
+RUN apt-get install -y python-pip python-dev build-essential gunicorn openjdk-8-jdk-headless
+RUN apt-get clean
 
 RUN pip install --upgrade setuptools wheel numpy
 
