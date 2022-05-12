@@ -10,10 +10,10 @@ RUN apt-get update -y --fix-missing
 RUN apt-get install -y python-pip python-dev build-essential gunicorn openjdk-11-jre
 RUN apt-get clean
 
+RUN python -m pip install --upgrade pip
 RUN pip install --upgrade setuptools wheel numpy
 
 RUN pip install --no-cache-dir \
-               grpcio==1.8.6 \
                flask==0.11.1 \
                flask-cors==3.0.7 \
                flask-prometheus-metrics==1.0.0 \
