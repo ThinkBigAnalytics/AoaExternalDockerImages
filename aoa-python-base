@@ -16,7 +16,7 @@ RUN pip install --upgrade setuptools wheel numpy
 RUN pip install --no-cache-dir \
                aoa==$AOA_CLI_VERSION \
                s3cmd==2.0.2 \
-               pandas==1.15 \
+               pandas==1.1.5 \
                tables>=3.5.2 \
                scikit-learn==0.24.2 \
                xgboost==0.90 \
