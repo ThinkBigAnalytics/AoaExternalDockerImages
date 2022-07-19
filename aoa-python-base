@@ -1,9 +1,9 @@
 # Copyright (c) Teradata.
 # Distributed under the terms of the Modified BSD License.
-ARG BASE_CONTAINER=python:3.9.12-buster
+ARG BASE_CONTAINER=python:3.7.13-slim-buster
 FROM $BASE_CONTAINER
 
-ARG AOA_CLI_VERSION=6.0.0rc6
+ARG AOA_CLI_VERSION=6.1.0
 
 RUN apt-get update -y --fix-missing
 
@@ -24,13 +24,13 @@ RUN pip install --no-cache-dir \
                healthcheck==1.3.3 \
                aoa==$AOA_CLI_VERSION \
                s3cmd==2.0.2 \
-               pandas>=0.24.2 \
+               pandas==1.15 \
                tables>=3.5.2 \
                scikit-learn==0.24.2 \
                xgboost==0.90 \
                joblib==1.1.0 \
-               shap==0.36.0 \
-               matplotlib==3.5.2 \
+               shap==0.41.0 \
+               matplotlib==3.3.4 \
                Jinja2==3.1.2 \
                nyoka==4.3.0
 
