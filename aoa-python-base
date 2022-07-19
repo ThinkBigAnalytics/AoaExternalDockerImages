@@ -7,7 +7,7 @@ ARG AOA_CLI_VERSION=6.1.0
 
 RUN apt-get update -y --fix-missing
 
-RUN apt-get install -y python-pip python-dev build-essential gunicorn openjdk-11-jre
+RUN apt-get install -y python-pip python-dev build-essential
 RUN apt-get clean
 
 RUN python -m pip install --upgrade pip
