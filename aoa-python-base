@@ -1,28 +1,7 @@
-# Copyright (c) Teradata.
-# Distributed under the terms of the Modified BSD License.
-ARG BASE_CONTAINER=python:3.9.13-slim-buster
-FROM $BASE_CONTAINER
+FROM python:3.9.13-alpine
 
-RUN apt-get update -y --fix-missing
-
-RUN apt-get install -y python-pip python-dev build-essential gunicorn
-RUN apt-get clean
-
-RUN python -m pip install --upgrade pip
-RUN pip install --upgrade setuptools wheel numpy
-
-RUN pip install --no-cache-dir \
-               aoa==6.1.0 \
-               s3cmd==2.2.0 \
-               pandas==1.1.5 \
-               tables>=3.5.2 \
-               scikit-learn==0.24.2 \
-               xgboost==1.6.1 \
-               joblib==1.1.0 \
-               shap==0.41.0 \
-               matplotlib==3.5.2 \
-               Jinja2==3.1.2 \
-               nyoka==4.3.0
+RUN apk update
+RUN apk add --no-cache python3-dev build-base py3-gunicorn
 
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 ENV PIP_ROOT_USER_ACTION=ignore
