@@ -19,11 +19,12 @@ RUN apk add --no-cache \
     py3-numpy \
     py3-yaml \
     py3-psutil \
-    py3-pycryptodome
+    py3-pycryptodome \
+    ca-certificates \
+    git
 
 RUN rm -f /usr/bin/python && ln -s /usr/bin/python3 /usr/bin/python
 RUN rm -f /usr/bin/pip && ln -s /usr/bin/pip3 /usr/bin/pip
 
 RUN pip install --no-cache-dir Jinja2==3.1.2 s3cmd==2.2.0 aoa
 
-RUN update-ca-certificates -f
