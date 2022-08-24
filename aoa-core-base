@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk
+FROM openjdk:17.0.2-slim-buster
 
 RUN apt update -y --fix-missing
 RUN apt -y install make \
@@ -12,7 +12,6 @@ RUN apt -y install make \
     curl \
     gnupg2 \
     software-properties-common \
-    maven \
     openssh-client \
     vim \
     bc \
