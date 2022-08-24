@@ -14,15 +14,16 @@ RUN apk add --no-cache \
     bc \
     jq \
     docker \
-    libffi-dev \
-    cargo \
-    openssl-dev
+    py3-cryptography \
+    py3-pandas \
+    py3-numpy \
+    py3-yaml \
+    py3-psutil \
+    py3-pycryptodome
 
 RUN rm -f /usr/bin/python && ln -s /usr/bin/python3 /usr/bin/python
 RUN rm -f /usr/bin/pip && ln -s /usr/bin/pip3 /usr/bin/pip
 
-ENV CRYPTOGRAPHY_DONT_BUILD_RUST=1
+RUN pip install --no-cache-dir Jinja2==3.1.2 s3cmd==2.2.0 aoa
 
-RUN pip install --no-cache-dir setuptools_rust= Jinja2==3.1.2 s3cmd==2.2.0 aoa
-
-RUN apk del openssl-dev libffi-dev cargo rust build-base python3-dev
+RUN update-ca-certificates -f
