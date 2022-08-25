@@ -1,4 +1,4 @@
-FROM openjdk:17.0.2-slim-buster
+FROM openjdk:17-slim-bullseye
 
 RUN apt update -y --fix-missing
 RUN apt -y install make \
@@ -29,4 +29,5 @@ RUN add-apt-repository \
 
 RUN apt update && apt -y install docker-ce docker-ce-cli containerd.io
 
-RUN pip install --no-cache-dir jinja2 s3cmd aoa
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir jinja2==3.1.2 s3cmd==2.2.0 aoa==6.1.1
