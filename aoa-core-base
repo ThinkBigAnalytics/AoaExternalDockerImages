@@ -28,6 +28,5 @@ RUN add-apt-repository \
        stable"
 
 RUN apt update && apt -y install docker-ce docker-ce-cli containerd.io
-ENV DOCKER_API_VERSION=1.39
 
 RUN pip install --no-cache-dir jinja2 s3cmd teradataml
