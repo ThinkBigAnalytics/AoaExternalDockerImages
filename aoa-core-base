@@ -29,4 +29,4 @@ RUN add-apt-repository \
 
 RUN apt update && apt -y install docker-ce docker-ce-cli containerd.io
 
-RUN pip install --no-cache-dir jinja2 s3cmd teradataml
+RUN pip install --no-cache-dir jinja2 s3cmd aoa
