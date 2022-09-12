@@ -27,4 +27,6 @@ RUN pip install --no-cache-dir \
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 ENV PIP_ROOT_USER_ACTION=ignore
 
-CMD ["python"]
+COPY scripts/.s3cfg /root/.s3cfg
+COPY scripts/jobs-entrypoint.sh entrypoint.sh
+ENTRYPOINT [ "./entrypoint.sh" ]
