@@ -24,9 +24,4 @@ RUN pip install --no-cache-dir \
                Jinja2==3.1.2 \
                nyoka==4.3.0
 
-ENV PIP_DISABLE_PIP_VERSION_CHECK=1
-ENV PIP_ROOT_USER_ACTION=ignore
-
-COPY scripts/.s3cfg /root/.s3cfg
-COPY scripts/jobs-entrypoint.sh entrypoint.sh
-ENTRYPOINT [ "./entrypoint.sh" ]
+CMD ["python"]

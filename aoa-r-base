@@ -39,6 +39,4 @@ RUN Rscript -e "install.packages('remotes')" && \
 
 RUN Rscript -e "install.packages(c('r2pmml', 'devtools', 'jsonlite', 'plumber', 'urltools', 'gbm', 'uuid', 'httr', 'argparse', 'caret', 'e1071', 'R.utils'))"
 
-COPY scripts/.s3cfg /root/.s3cfg
-COPY scripts/jobs-entrypoint.sh entrypoint.sh
-ENTRYPOINT [ "./entrypoint.sh" ]
+CMD ["R"]
