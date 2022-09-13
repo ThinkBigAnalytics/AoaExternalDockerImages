@@ -3,8 +3,6 @@
 ARG BASE_CONTAINER=rocker/r-base:4.0.3
 FROM $BASE_CONTAINER
 
-ARG AOA_CLI_VERSION=4.0
-
 RUN apt-get update -qq && apt-get install -y wget build-essential checkinstall \
     libreadline-dev libncursesw5-dev libssl-dev \
     libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev zlib1g-dev
@@ -31,7 +29,7 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev && \
     apt-get clean
 
-RUN pip3 install --no-cache-dir s3cmd==2.0.2 aoa==$AOA_CLI_VERSION
+RUN pip3 install --no-cache-dir s3cmd==2.0.2 aoa==6.1.2
 
 RUN Rscript -e "install.packages('remotes')" && \
     Rscript -e "remotes::install_version('dbplyr', version='2.1.1', repos='https://cloud.r-project.org')" && \
