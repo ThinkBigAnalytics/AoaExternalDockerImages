@@ -1,7 +1,6 @@
 # Copyright (c) Teradata.
 # Distributed under the terms of the Modified BSD License.
-ARG BASE_CONTAINER=rocker/r-base:4.0.3
-FROM $BASE_CONTAINER
+FROM rocker/r-base:4.0.3
 
 RUN apt-get update -qq && apt-get install -y wget build-essential checkinstall \
     libreadline-dev libncursesw5-dev libssl-dev \

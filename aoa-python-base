@@ -1,7 +1,6 @@
 # Copyright (c) Teradata.
 # Distributed under the terms of the Modified BSD License.
-ARG BASE_CONTAINER=python:3.9.13-slim-buster
-FROM $BASE_CONTAINER
+FROM python:3.9.13-slim-buster
 
 RUN apt-get update -y --fix-missing
 
